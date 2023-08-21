@@ -482,7 +482,7 @@ def _bundle_post_process_and_sign(
         provisioning_profile,
         rule_descriptor,
         rule_label,
-        env = {}):
+        env = None):
     """Bundles, post-processes and signs the files in partial_outputs.
 
     Args:
@@ -634,6 +634,7 @@ def _bundle_post_process_and_sign(
             resolved_codesigningtool = apple_mac_toolchain_info.resolved_codesigningtool,
             rule_descriptor = rule_descriptor,
             signed_frameworks = transitive_signed_frameworks,
+            env = env,
         )
 
         has_different_embedding_archive = outputs.has_different_embedding_archive(
@@ -703,7 +704,7 @@ def _bundle_post_process_and_sign(
                 resolved_codesigningtool = apple_mac_toolchain_info.resolved_codesigningtool,
                 rule_descriptor = rule_descriptor,
                 signed_frameworks = transitive_signed_frameworks,
-                env = env
+                env = env,
             )
 
 def _process(
@@ -726,7 +727,8 @@ def _process(
         process_and_sign_template,
         provisioning_profile = None,
         rule_descriptor,
-        rule_label):
+        rule_label,
+        env = {}):
     """Processes a list of partials that provide the files to be bundled.
 
     Args:
@@ -791,6 +793,7 @@ def _process(
             provisioning_profile = provisioning_profile,
             rule_descriptor = rule_descriptor,
             rule_label = rule_label,
+            env = env,
         )
         transitive_output_files = [depset([output_archive])]
     else:
