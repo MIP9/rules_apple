@@ -241,7 +241,8 @@ def _bundle_partial_outputs_files(
         partial_outputs,
         platform_prerequisites,
         provisioning_profile,
-        rule_descriptor):
+        rule_descriptor,
+        env):
     """Invokes bundletool to bundle the files specified by the partial outputs.
 
     Args:
@@ -448,6 +449,7 @@ def _bundle_partial_outputs_files(
             progress_message = "Bundling, processing and signing %s" % label_name,
             tools = bundling_tools,
             xcode_config = platform_prerequisites.xcode_version_config,
+            env = env,
             **action_args
         )
     else:
@@ -458,6 +460,7 @@ def _bundle_partial_outputs_files(
             input_manifests = resolved_bundletool.input_manifests,
             mnemonic = "BundleApp",
             progress_message = "Bundling %s" % label_name,
+            env = env,
             **action_args
         )
 
@@ -569,6 +572,7 @@ def _bundle_post_process_and_sign(
             platform_prerequisites = platform_prerequisites,
             provisioning_profile = provisioning_profile,
             rule_descriptor = rule_descriptor,
+            env = env,
         )
 
         actions.write(
@@ -606,6 +610,7 @@ def _bundle_post_process_and_sign(
             platform_prerequisites = platform_prerequisites,
             provisioning_profile = provisioning_profile,
             rule_descriptor = rule_descriptor,
+            env = env,
         )
 
         archive_codesigning_path = archive_paths[_LOCATION_ENUM.bundle]
@@ -682,6 +687,7 @@ def _bundle_post_process_and_sign(
                 platform_prerequisites = platform_prerequisites,
                 provisioning_profile = provisioning_profile,
                 rule_descriptor = rule_descriptor,
+                env = env,
             )
 
             codesigning_support.post_process_and_sign_archive_action(
