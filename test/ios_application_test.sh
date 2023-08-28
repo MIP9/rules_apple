@@ -138,6 +138,7 @@ EOF
 # Tests that the IPA post-processor is executed and can modify the bundle.
 function test_ipa_post_processor() {
   create_common_files
+  export FOO=bar
 
   cat >> app/BUILD <<EOF
 ios_application(
@@ -155,12 +156,14 @@ EOF
   cat > app/post_processor.sh <<EOF
 #!/bin/bash
 WORKDIR="\$1"
-echo $VAR > "\$WORKDIR/Payload/app.app/inserted_by_post_processor.txt"
+printenv
+echo 'Value of FOO is $FOO'
+echo '${FOO}' >> "\$WORKDIR/Payload/app.app/inserted_by_post_processor.txt"
 EOF
   chmod +x app/post_processor.sh
 
-  do_build ios //app:app --action_env=VAR=value || fail "Should build"
-  assert_equals "value1" "$(unzip_single_file "test-bin/app/app.ipa" \
+  bazel build --action_env=FOO=tor //app:app || fail "Should build"
+  assert_equals "bar" "$(unzip_single_file "test-bin/app/app.ipa" \
       "Payload/app.app/inserted_by_post_processor.txt")"
 }
 
