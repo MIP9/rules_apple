@@ -241,7 +241,8 @@ def _bundle_partial_outputs_files(
         partial_outputs,
         platform_prerequisites,
         provisioning_profile,
-        rule_descriptor):
+        rule_descriptor,
+        env):
     """Invokes bundletool to bundle the files specified by the partial outputs.
 
     Args:
@@ -448,6 +449,7 @@ def _bundle_partial_outputs_files(
             progress_message = "Bundling, processing and signing %s" % label_name,
             tools = bundling_tools,
             xcode_config = platform_prerequisites.xcode_version_config,
+            env = env,
             **action_args
         )
     else:
@@ -458,6 +460,7 @@ def _bundle_partial_outputs_files(
             input_manifests = resolved_bundletool.input_manifests,
             mnemonic = "BundleApp",
             progress_message = "Bundling %s" % label_name,
+            env = env,
             **action_args
         )
 
@@ -481,7 +484,8 @@ def _bundle_post_process_and_sign(
         process_and_sign_template,
         provisioning_profile,
         rule_descriptor,
-        rule_label):
+        rule_label,
+        env = None):
     """Bundles, post-processes and signs the files in partial_outputs.
 
     Args:
@@ -560,6 +564,7 @@ def _bundle_post_process_and_sign(
             platform_prerequisites = platform_prerequisites,
             provisioning_profile = provisioning_profile,
             rule_descriptor = rule_descriptor,
+            env = env,
         )
 
         actions.write(
@@ -589,6 +594,7 @@ def _bundle_post_process_and_sign(
             platform_prerequisites = platform_prerequisites,
             provisioning_profile = provisioning_profile,
             rule_descriptor = rule_descriptor,
+            env = env,
         )
 
         archive_codesigning_path = archive_paths[_LOCATION_ENUM.bundle]
@@ -617,6 +623,7 @@ def _bundle_post_process_and_sign(
             resolved_codesigningtool = apple_mac_toolchain_info.resolved_codesigningtool,
             rule_descriptor = rule_descriptor,
             signed_frameworks = transitive_signed_frameworks,
+            env = env,
         )
 
         has_different_embedding_archive = outputs.has_different_embedding_archive(
@@ -664,6 +671,7 @@ def _bundle_post_process_and_sign(
                 platform_prerequisites = platform_prerequisites,
                 provisioning_profile = provisioning_profile,
                 rule_descriptor = rule_descriptor,
+                env = env,
             )
 
             codesigning_support.post_process_and_sign_archive_action(
@@ -686,6 +694,7 @@ def _bundle_post_process_and_sign(
                 resolved_codesigningtool = apple_mac_toolchain_info.resolved_codesigningtool,
                 rule_descriptor = rule_descriptor,
                 signed_frameworks = transitive_signed_frameworks,
+                env = env,
             )
 
 def _process(
@@ -708,7 +717,8 @@ def _process(
         process_and_sign_template,
         provisioning_profile = None,
         rule_descriptor,
-        rule_label):
+        rule_label,
+        env = None):
     """Processes a list of partials that provide the files to be bundled.
 
     Args:
@@ -773,6 +783,7 @@ def _process(
             provisioning_profile = provisioning_profile,
             rule_descriptor = rule_descriptor,
             rule_label = rule_label,
+            env = env,
         )
         transitive_output_files = [depset([output_archive])]
     else:

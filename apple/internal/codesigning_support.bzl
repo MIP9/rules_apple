@@ -602,7 +602,8 @@ def _post_process_and_sign_archive_action(
         provisioning_profile,
         resolved_codesigningtool,
         rule_descriptor,
-        signed_frameworks):
+        signed_frameworks,
+        env = None):
     """Post-processes and signs an archived bundle.
 
     Args:
@@ -745,6 +746,7 @@ def _post_process_and_sign_archive_action(
             progress_message = progress_message,
             tools = processing_tools,
             xcode_config = platform_prerequisites.xcode_version_config,
+            env = env,
         )
     else:
         actions.run(
@@ -754,6 +756,7 @@ def _post_process_and_sign_archive_action(
             mnemonic = mnemonic,
             outputs = [output_archive],
             progress_message = progress_message,
+            env = env
         )
 
 def _sign_binary_action(
